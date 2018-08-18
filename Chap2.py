@@ -171,5 +171,50 @@ print("S12: {0} W = {1} W".format(S12, cartToPolar(S12, deg=True)))
 print("S21: {0} W = {1} W".format(S21, cartToPolar(S21, deg=True)))
 
 # Line losses
-Sloss = S12+S21
-print("Sloss: ",Sloss)
+Sloss = S12 + S21
+print("Sloss: ", Sloss)
+
+# ######### Example 2.6 #########
+# Create input from to voltage sources, #1 with variable plus/minus 30
+# degree from given value. Magnitude of V1, V2 and angle V2 is kept constant
+# Compute complex power for each source and the line loss.
+# Tabulate P1, P2, PL against V1 angle.
+E1 = 120                    # Source #1 Voltage Mag
+a1 = -5                     # Source #1 Phase angle
+E2 = 100                    # Source #2 Voltage Mag
+a2 = 0                      # Source #2 Phase angle
+R = 1                       # Line Resistance
+X = 7                       # Line Reactance
+Z = R + 1j * X              # Line Impedance
+a1 = np.arange(a1 - 30, a1 + 35, 5)  # Finding plus/minus 30 degr
+a1r = a1*np.pi/180          # Convert degrees to radians
+a2 = np.ones(len(a1))*a2    # Create col. array of same length for a2
+a2r = a2*np.pi/180          # Convert degrees to radians
+V1 = E1*np.cos(a1r) + 1j * E1*np.sin(a1r)
+V2 = E2*np.cos(a2r) + 1j * E2*np.sin(a2r)
+I12 = (V1-V2)/Z
+I21 = (V2-V1)/Z
+S1 = V1*np.conj(I12)        # Finding Apparent power S1
+P1 = np.real(S1)
+Q1 = np.imag(S1)
+S2 = V2*np.conj(I21)        # Finding Apparent power S2
+P2 = np.real(S2)
+Q2 = np.imag(S2)
+Sloss = S1+S2               # Finding Apparent power Sloss
+Ploss = np.real(Sloss)
+Qloss = np.imag(Sloss)
+Result1 = [a1, P1, P2, Ploss]
+print("{0} \t {1} \t {2} \t {3}".format("Delta 1", "P-1", "P-2", "Ploss"))
+for i in np.arange(len(a1)):
+    print("{0} \t {1} \t {2} \t {3}".format(Result1[0][i], Result1[1][i],
+                                            Result1[2][i], Result1[3][i]))
+fig, ax = plt.subplots()
+for i in Result1[1:]:
+    ax.plot(a1, i)
+ax.set_xlabel("Source #1 Voltage Phase Angle")
+ax.set_ylabel("P, Watts")
+ax.text(-26,-550,"P1")
+ax.text(-26, 600,"P2")
+ax.text(-26,100,"Ploss")
+ax.grid(True)
+plt.show()
