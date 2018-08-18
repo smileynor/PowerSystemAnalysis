@@ -206,15 +206,15 @@ Qloss = np.imag(Sloss)
 Result1 = [a1, P1, P2, Ploss]
 print("{0} \t {1} \t {2} \t {3}".format("Delta 1", "P-1", "P-2", "Ploss"))
 for i in np.arange(len(a1)):
-    print("{0} \t {1} \t {2} \t {3}".format(Result1[0][i], Result1[1][i],
-                                            Result1[2][i], Result1[3][i]))
+    print("{0} \t {1:10.4f} \t {2:10.4f} \t {3:10.4f}".format(
+        Result1[0][i], Result1[1][i], Result1[2][i], Result1[3][i]))
 fig, ax = plt.subplots()
 for i in Result1[1:]:
     ax.plot(a1, i)
 ax.set_xlabel("Source #1 Voltage Phase Angle")
 ax.set_ylabel("P, Watts")
-ax.text(-26,-550,"P1")
-ax.text(-26, 600,"P2")
-ax.text(-26,100,"Ploss")
+ax.text(-26, -550, "P1")
+ax.text(-26, 600, "P2")
+ax.text(-26, 100, "Ploss")
 ax.grid(True)
 plt.show()
