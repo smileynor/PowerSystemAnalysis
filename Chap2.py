@@ -353,7 +353,34 @@ P = 800
 Px = 1000
 # 800 = Vm*Im*cos(theta)/(sqrt(2)*sqrt(2))
 I_mag = 2*800/(v_mag * np.cos(thetav*np.pi/180))
-print("I", I_mag, cartToPolar(I_mag,deg=True))
-Q = np.sqrt(Px**2-P**2)
+print("I", I_mag, cartToPolar(I_mag, deg=True))
+print("Irms:", I_mag / np.sqrt(2), cartToPolar(I_mag / np.sqrt(2), deg=True))
+V = v_mag / np.sqrt(2)
+Q = np.sqrt(Px**2 - P**2)
 S = P + 1j * Q
-print("S: ",S)
+print("S: ", S)
+P = I_mag * v_mag * np.cos(thetav * np.pi / 180) / 2
+Q = I_mag * v_mag * np.sin(thetav * np.pi / 180) / 2
+print("S: ", S)
+
+# c)
+Z = (V**2) / np.conj(S)
+print("Z: ", np.round(Z, 4), np.round(cartToPolar(Z, deg=True), 4))
+t = np.arange(0, 16.67+0.1, 0.1)/1000
+v_t = v_mag * np.cos(377 * t)
+p_t = 800 + 1000 * np.cos((754 * t - 36.87*np.pi/180))
+i_t = p_t / v_t
+
+# Figure
+fig, axes = plt.subplots(3, 1)
+axes[0].plot(t, v_t)
+axes[0].set_title("v(t)")
+axes[0].set_xlabel("t ")
+axes[1].plot(t, p_t)
+axes[1].set_title("p(t)")
+axes[1].set_xlabel("t")
+axes[2].plot(t, i_t)
+axes[2].set_title("i(t)=p(t)/v(t)")
+axes[2].set_xlabel("t")
+axes[2].set_ylim(-15, 15)
+plt.show()
