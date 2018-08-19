@@ -218,3 +218,53 @@ ax.text(-26, 600, "P2")
 ax.text(-26, 100, "Ploss")
 ax.grid(True)
 plt.show()
+
+# ######### Example 2.7 ############
+# A three-phase line has an impedance of 2 + 4j Ohm. Line-to-Line Voltage
+# magnitude is |V| = 207.85 V. The load connects to twho balanced three-phase
+# loads, one Delta-connected and one Y-connected. The Y-connected has impedance
+# of 30 + 40j per phase, and the Delta-connected has 60 - j45 Ohm.
+# Find a: Current, real power and reactive power drawn from the supply
+# Find b: The line voltage at the combined loads.
+# Find c: the current per phase in each load
+# Find d: The total real and reactive powers in each load and the line.
+print("Example 2.7")
+Vsup = 207.85                   # Supply voltage magnitude
+Zline = 2+1j*4                  # Line impedance
+Zload1_delta = 60 - 1j * 45      # Line-to-line Impedance of Delta-load
+Zload2_y = 30 + 1j * 40          # Line-to-neutral Impedance of Y-load
+Zload1_y = Zload1_delta/3.0     # Converting the Delta-connected load into Y-eq
+print("Z_delta as Y: ", Zload1_y)
+# Finding the total phase impedance
+Ztot_phase = Zline + (Zload1_y * Zload2_y) / (Zload1_y + Zload2_y)
+Vsup_phase = Vsup / np.sqrt(3)
+I_phase = Vsup_phase / Ztot_phase
+print("Phase current: ", I_phase)
+Stot = 3 * Vsup_phase * np.conj(I_phase)
+print("Total real power from supply: ", np.real(Stot))
+print("Total reactive power from supply: ", np.imag(Stot))
+
+# b)
+Vload_phase = Vsup_phase - Zline * I_phase  # V2 = V1 - Z*I
+Vload_line = Vload_phase * np.sqrt(3) * polarToCart(
+    1, 30, deg=True)  # Convert phase to line
+print("Voltage at load, Line-to-Line: ", Vload_line,
+      cartToPolar(Vload_line, deg=True))
+
+# c)
+I_load_1_y = Vload_phase / Zload1_y
+I_load_2_y = Vload_phase / Zload2_y
+I_load_1_delta = I_load_1_y / (np.sqrt(3) * polarToCart(1, -30, deg=True))
+print("I1, Y: ", I_load_1_y, cartToPolar(I_load_1_y, deg=True))
+print("I2, Y: ", I_load_2_y, cartToPolar(I_load_2_y, deg=True))
+print("I1ab, delta: ", I_load_1_delta, cartToPolar(I_load_1_delta, deg=True))
+
+# d)
+S1 = 3*Vload_phase*I_load_1_y
+S2 = 3*Vload_phase*I_load_2_y
+Sline = 3*Zline*I_phase**2
+print("S1: ", S1, cartToPolar(S1, deg=True))
+print("S2: ", S2, cartToPolar(S2, deg=True))
+print("Sline: ", Sline, cartToPolar(Sline, deg=True))
+
+
