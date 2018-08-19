@@ -1,52 +1,58 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+# ######## Example 2.1 ############
+
 Vm = 100
 thetav = 0   # Volage amplitude and phase angle
 Z = 1.25
 gama = 60   # Impedance magnitude and phase angle
-thetai = thetav - gama
-theta = (thetav-thetai)*np.pi/180   # Degree to radian
-Im = Vm/Z                           # Current amplitude
-wt = np.arange(0.0, 2*np.pi, 0.05)  # wt from 0 to 2*pi
-v = Vm*np.cos(wt)                   # Instantaneous voltage
-i = Im*np.cos(wt+thetai*np.pi/180)  # Instantaneous current
-p = v*i                             # Instantaneous power
-V = Vm/np.sqrt(2)                   # rms voltage and current
-I = Im/np.sqrt(2)
-P = V*I*np.cos(theta)               # Average power
-Q = V*I*np.sin(theta)               # Reactive power
-S = P+1j*Q                          # Complex power
-pr = P*(1+np.cos(2*(wt+thetav)))    # Eq. (2.6)
-px = Q*np.sin(2*(wt+thetav))        # Eq. (2.8)
-PP = P*np.ones(len(wt))             # Average power of length w for plot
-xline = np.zeros(len(wt))           # Generates a zero vector
-wt = wt*180/np.pi                   # Converting radians to degree
+def runExample21(Vm,thetav,Z,gama):
+    thetai = thetav - gama
+    theta = (thetav-thetai)*np.pi/180   # Degree to radian
+    Im = Vm/Z                           # Current amplitude
+    wt = np.arange(0.0, 2*np.pi, 0.05)  # wt from 0 to 2*pi
+    v = Vm*np.cos(wt)                   # Instantaneous voltage
+    i = Im*np.cos(wt+thetai*np.pi/180)  # Instantaneous current
+    p = v*i                             # Instantaneous power
+    V = Vm/np.sqrt(2)                   # rms voltage and current
+    I = Im/np.sqrt(2)
+    P = V*I*np.cos(theta)               # Average power
+    Q = V*I*np.sin(theta)               # Reactive power
+    S = P+1j*Q                          # Complex power
+    pr = P*(1+np.cos(2*(wt+thetav)))    # Eq. (2.6)
+    px = Q*np.sin(2*(wt+thetav))        # Eq. (2.8)
+    PP = P*np.ones(len(wt))             # Average power of length w for plot
+    xline = np.zeros(len(wt))           # Generates a zero vector
+    wt = wt*180/np.pi                   # Converting radians to degree
 
-# Creating the figure
-fig, axes = plt.subplots(2, 2)
-for line in [v, i, xline]:
-    axes[0, 0].plot(wt, line)
-axes[0, 0].set_title("v(t)=Vm cos(wt), i(t)=Im cos(wt+{0})".format(thetai))
-axes[0, 0].set_xlabel("wt, degree")
+    # Creating the figure
+    fig, axes = plt.subplots(2, 2)
+    for line in [v, i, xline]:
+        axes[0, 0].plot(wt, line)
+    axes[0, 0].set_title("v(t)=Vm cos(wt), i(t)=Im cos(wt+{0})".format(thetai))
+    axes[0, 0].set_xlabel("wt, degree")
 
-for line in [p, xline]:
-    axes[0, 1].plot(wt, line)
-axes[0, 1].set_title("p(t)=v(t)*i(t)")
-axes[0, 1].set_xlabel("wt, degree")
+    for line in [p, xline]:
+        axes[0, 1].plot(wt, line)
+    axes[0, 1].set_title("p(t)=v(t)*i(t)")
+    axes[0, 1].set_xlabel("wt, degree")
 
-for line in [pr, PP, xline]:
-    axes[1, 0].plot(wt, line)
-axes[1, 0].set_title("pr(t)  -  Eq. 2.6")
-axes[1, 0].set_xlabel("wt, degree")
+    for line in [pr, PP, xline]:
+        axes[1, 0].plot(wt, line)
+    axes[1, 0].set_title("pr(t)  -  Eq. 2.6")
+    axes[1, 0].set_xlabel("wt, degree")
 
-for line in [px, xline]:
-    axes[1, 1].plot(wt, line)
-axes[1, 1].set_title("px(t)  -  Eq. 2.8")
-axes[1, 1].set_xlabel("wt, degree")
+    for line in [px, xline]:
+        axes[1, 1].plot(wt, line)
+    axes[1, 1].set_title("px(t)  -  Eq. 2.8")
+    axes[1, 1].set_xlabel("wt, degree")
 
-fig.subplots_adjust(
-    wspace=0.3, hspace=0.5)  # Legger til mellomrom mellom figurer.
+    fig.subplots_adjust(
+        wspace=0.3, hspace=0.5)  # Legger til mellomrom mellom figurer.
+    return fig
+fig = runExample21(Vm,thetav,Z,gama)
+
 #plt.show()
 
 
@@ -217,7 +223,7 @@ ax.text(-26, -550, "P1")
 ax.text(-26, 600, "P2")
 ax.text(-26, 100, "Ploss")
 ax.grid(True)
-plt.show()
+#plt.show()
 
 # ######### Example 2.7 ############
 # A three-phase line has an impedance of 2 + 4j Ohm. Line-to-Line Voltage
@@ -267,4 +273,87 @@ print("S1: ", S1, cartToPolar(S1, deg=True))
 print("S2: ", S2, cartToPolar(S2, deg=True))
 print("Sline: ", Sline, cartToPolar(Sline, deg=True))
 
+# ########## Example 2.8 ##############
+# The first load absorbs 560.1 kVA at 0.707 power factor lagging.
+# Current lagging after voltage. The second load absorbs 132 kW at unity
+# power factor.
+# Find a: The magnitude of the line voltage atthe source end of the line.
+# Find b: Total real and reactive power loss in the line.
+# Find c: Real power and reactive power supplied at the sending end of the line
 
+Z_line_phase = 0.4 + 1j * 2.7   # Phase impedance
+Vload_line = 3810.5             # Voltage magnitude at load
+Vload_phase = Vload_line/(np.sqrt(3))  # Voltage pr phase at load
+theta = np.arccos(0.707)
+S1_mag = 560.1*1000
+S1 = S1_mag * np.cos(theta) + 1j * S1_mag * np.sin(theta)
+S2 = 132*1000
+Stot = S1+S2
+print(Stot)
+I_phase = np.conj(Stot) / (3 * np.conj(Vload_phase))  # S = 3*V*I'
+print("I_phase: ", I_phase, cartToPolar(I_phase, deg=True))
+Vsup_phase = Vload_phase + I_phase * Z_line_phase
+Vsup_line = Vsup_phase * np.sqrt(3)
+print("Voltage line magnitude at supply: ", np.abs(Vsup_line))
+
+# b)
+Sline = 3 * I_phase**2 * Z_line_phase
+print("Real and reactive power loss in the line: ", Sline)
+
+# c)
+Ssup = 3 * Vsup_phase * np.conj(I_phase)
+print("Real and reactive power supplied at the sending end of the line [kVA]: ",
+      Ssup/1000)
+
+
+# ######## Problems Chap 2, 2.1 #############
+# Modify Example 2.1 to take in new values for Vm, thetav, Zmag, gama
+# Test an inductive, capacitive and resistive load. Compare.
+# Find b: Calculate real and ractive power for each load and compare the
+#         results obatined from the curves.
+# Find c: Find the sum S of all the loads.
+
+Vm = 100        # Peak voltage Vm,
+thetav = 0      # Voltage phase angle,
+Zmag = [
+    polarToCart(1.25, 60, deg=True),
+    polarToCart(2.0, -30, deg=True),
+    polarToCart(2.5, 0, deg=True)
+]
+gama = [60, -30, 0]
+for i in np.arange(len(Zmag)):
+    print(Zmag[i])
+    fig = runExample21(Vm, thetav, np.abs(Zmag[i]), gama[i])
+    #plt.show()
+
+# b)
+S1 = Vm**2/np.conj(Zmag[0])/2       # Divide by to because = sqrt(2)**2
+S2 = Vm**2/np.conj(Zmag[1])/2
+S3 = Vm**2/np.conj(Zmag[2])/2
+Stot = S1+S2+S3
+print("S1: ", S1)
+print("S2: ", S2)
+print("S3: ", S3)
+print("Stot: ", Stot)
+
+# ######### Problem 2.2 ##############
+# Find a: the complex power supplied to the load
+# Find b: the instantaneous current i(t) and the rms value of the current
+#          supplied to the load.
+# Find c: The load impedance
+# Plot d: v(t), p(t), i(t)
+print("Problem 2.2")
+v_mag = 200
+w = 377
+
+# instant power p(t) = |V||I|*cos(theta)+|V||I|*cos(theta)cos(2(wt+thetav))
+thetav = -36.87
+# Vm = |V|*sqrt(2)
+P = 800
+Px = 1000
+# 800 = Vm*Im*cos(theta)/(sqrt(2)*sqrt(2))
+I_mag = 2*800/(v_mag * np.cos(thetav*np.pi/180))
+print("I", I_mag, cartToPolar(I_mag,deg=True))
+Q = np.sqrt(Px**2-P**2)
+S = P + 1j * Q
+print("S: ",S)
